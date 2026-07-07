@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'https://farmacia-jjxo.onrender.com'
-})
+});
 
 export const getProdutos = async () => {
   try {
@@ -25,12 +25,17 @@ export const createProduto = async (produto: any) => {
 };
 
 export const updateProduto = async (id: string, dados: any) => {
-  const produtoComId = {
-    ...dados,
-    id: parseInt(id)
-  };
-  const resposta = await axios.put('https://farmacia-jjxo.onrender.com/produtos', produtoComId);
-  return resposta.data;
+  try {
+    const produtoComId = {
+      ...dados,
+      id: parseInt(id)
+    };
+    const response = await api.put('/produtos', produtoComId);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao atualizar produto:', error);
+    throw error;
+  }
 };
 
 export const deleteProduto = async (id: string) => {
@@ -59,6 +64,30 @@ export const createCategoria = async (categoria: any) => {
     return response.data;
   } catch (error) {
     console.error('Erro ao criar categoria:', error);
+    throw error;
+  }
+};
+
+export const updateCategoria = async (id: number, dados: any) => {
+  try {
+    const categoriaComId = {
+      ...dados,
+      id: id
+    };
+    const response = await api.put('/categorias', categoriaComId);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao atualizar categoria:', error);
+    throw error;
+  }
+};
+
+export const deleteCategoria = async (id: number) => {
+  try {
+    const response = await api.delete(`/categorias/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao deletar categoria:', error);
     throw error;
   }
 };
