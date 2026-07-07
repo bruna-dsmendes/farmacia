@@ -1,33 +1,52 @@
-# React + TypeScript + Vite
+# 💊 InteliFarma - Sistema de Gerenciamento de Farmácia
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+O **InteliFarma** é uma aplicação web responsiva voltada para o gerenciamento de inventário de uma farmácia. O sistema permite o controle completo (CRUD) de **Produtos** e suas respectivas **Categorias**, integrado a uma API REST integrada no ecossistema Spring Boot.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Funcionalidades Principais
 
-## React Compiler
+### 📦 Módulo de Produtos
+* **Listagem Dinâmica:** Visualização de produtos em formato de cards responsivos com tratamento para itens esgotados.
+* **Filtro em Tempo Real:** Busca instantânea por nome do produto.
+* **Controle de Estoque:** Exibição clara do preço formatado (`R$`) e quantidade disponível.
+* **CRUD Completo via Modal:** Cadastro e edição centralizados em uma única estrutura de modal dinâmico.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🗂️ Módulo de Categorias
+* **Gerenciamento Simplificado:** Criação e alteração de categorias de medicamentos (ex: Anti-Inflamatórios, Analgésicos).
+* **Fluxo em Modais:** Operações de escrita (`POST` e `PUT`) otimizadas por sobreposição, mantendo o usuário no contexto da listagem atual.
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## 🛠️ Tecnologias Utilizadas
 
+* **Front-end:**
+    * [React](https://react.dev/) (com TypeScript)
+    * [Tailwind CSS](https://tailwindcss.com/) (Estilização e utilitários de interface)
+    * [Axios](https://axios-http.com/) (Comunicação HTTP com a API)
+    * [React Router DOM](https://reactrouter.com/) (Navegação interna da SPA)
+* **Back-end (API Externa):**
+    * Spring Boot hospedado no Render
+    * Swagger/OpenAPI (Documentação dos Endpoints)
+
+---
+
+## 📐 Estrutura de Contratos da API
+
+As operações realizam o mapeamento de propriedades seguindo as especificações estritas do backend:
+
+### Produto (`PUT /produtos`)
+Envia o identificador numérico em conjunto com a carga útil na raiz do objeto para compatibilidade com o servidor:
 ```json
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  "id": 10,
+  "nome": "Ibuprofeno 100mg",
+  "descricao": "Ibuprofeno 100mg",
+  "preco": 17.00,
+  "quantidade": 25,
+  "foto": "[https://i.imgur.com/b7wVo2b.png](https://i.imgur.com/b7wVo2b.png)",
+  "laboratorio": "Geral",
+  "categoria": {
+    "id": 1
   }
 }
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
-# farmacia
