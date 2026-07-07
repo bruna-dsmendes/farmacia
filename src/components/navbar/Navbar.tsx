@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Navbar() {
   return (
     <>
@@ -5,13 +7,12 @@ function Navbar() {
                             bg-emerald-800 text-white'>
 
         <div className="container flex justify-between text-lg mx-8">
-          FarmaVida
+          <Link to='/home' className='font-bold text-xl'> InteliFarma </Link>
 
           <div className='flex gap-4'>
             Produtos
             Categorias
-            Cadastrar Produto
-            Perfil
+            Cadastrar Categoria
             Sair
           </div>
         </div>
