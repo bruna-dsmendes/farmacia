@@ -5,7 +5,7 @@ import Footer from './components/footer/Footer'
 import ListaCategorias from './components/categoria/listacategorias/ListaCategorias'
 import FormCategoria from './components/categoria/formcategoria/FormCategoria'
 import DeletarCategoria from './components/categoria/deletarcategoria/DeletarCategoria'
-import 'react-toastify/dist/ReactToastify.css'
+import './App.css'
 
 function App() {
   return (
