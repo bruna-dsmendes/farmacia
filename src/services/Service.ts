@@ -24,14 +24,13 @@ export const createProduto = async (produto: any) => {
   }
 };
 
-export const updateProduto = async (id: string, produto: any) => {
-  try {
-    const response = await api.put(`/produtos/${id}`, produto);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao atualizar produto:', error);
-    throw error;
-  }
+export const updateProduto = async (id: string, dados: any) => {
+  const produtoComId = {
+    ...dados,
+    id: parseInt(id)
+  };
+  const resposta = await axios.put('https://farmacia-jjxo.onrender.com/produtos', produtoComId);
+  return resposta.data;
 };
 
 export const deleteProduto = async (id: string) => {

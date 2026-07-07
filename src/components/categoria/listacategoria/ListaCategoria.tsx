@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import CardCategoria from '../cardcategoria/CardCategoria';
-import { getCategorias } from '../../../services/Service';
+import ModalCategoria from '../../../models/ModalCategoria';
 
 function ListaCategorias() {
   const [categorias, setCategorias] = useState<any[]>([]);
   const [carregando, setCarregando] = useState(true);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState<any>(null);
+
   async function buscarCategorias() {
     try {
       setCarregando(true);
-      const dados = await getCategorias();
-      setCategorias(dados);
+      const resposta = await axios.get('https://farmacia-jjxo.onrender.com/categorias');
+      setCategorias(resposta.data);
     } catch (error) {
       console.error("Erro ao carregar categorias:", error);
     } finally {
@@ -21,6 +25,24 @@ function ListaCategorias() {
   useEffect(() => {
     buscarCategorias();
   }, []);
+
+  const handleEditar = (cat: any) => {
+    setCategoriaSelecionada(cat);
+    setIsModalOpen(true);
+  };
+
+  const handleDeletar = async (id: number, nome: string) => {
+    if (window.confirm(`Deseja mesmo deletar a categoria "${nome}"?`)) {
+      try {
+        await axios.delete(`https://farmacia-jjxo.onrender.com/categorias/${id}`);
+        alert('Categoria deletada com sucesso!');
+        buscarCategorias();
+      } catch (error) {
+        console.error(error);
+        alert('Erro ao deletar. Certifique-se de que não existem produtos vinculados a ela.');
+      }
+    }
+  };
 
   if (carregando) {
     return (
@@ -43,10 +65,19 @@ function ListaCategorias() {
             <CardCategoria
               key={cat.id}
               id={cat.id}
-              nome={cat.descricao || cat.nome} />
+              nome={cat.descricao || cat.nome}
+              onEdit={() => handleEditar(cat)}
+              onDelete={() => handleDeletar(cat.id, cat.descricao || cat.nome)}
+            />
           ))}
         </div>
       )}
+
+      <ModalCategoria
+        isOpen={isModalOpen}
+        onClose={() => { setIsModalOpen(false); setCategoriaSelecionada(null); }}
+        categoriaParaEditar={categoriaSelecionada}
+      />
     </div>
   );
 }

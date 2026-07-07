@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { createProduto, getCategorias } from '../services/Service';
+import { createProduto, updateProduto, getCategorias } from '../services/Service';
 
 interface ModalProdutoProps {
   isOpen: boolean;
   onClose: () => void;
+  produtoParaEditar?: any;
 }
 
-function ModalProduto({ isOpen, onClose }: ModalProdutoProps) {
+function ModalProduto({ isOpen, onClose, produtoParaEditar }: ModalProdutoProps) {
   const [carregando, setCarregando] = useState(false);
   const [categoriasBanco, setCategoriasBanco] = useState<any[]>([]);
 
@@ -22,9 +23,21 @@ function ModalProduto({ isOpen, onClose }: ModalProdutoProps) {
     if (isOpen) {
       getCategorias()
         .then(dados => setCategoriasBanco(dados))
-        .catch(erro => console.error("Erro ao carregar categorias no select:", erro));
+        .catch(erro => console.error("Erro ao carregar categorias:", erro));
+
+      if (produtoParaEditar) {
+        setProduto({
+          nome: produtoParaEditar.nome,
+          preco: String(produtoParaEditar.preco),
+          estoque: String(produtoParaEditar.quantidade || produtoParaEditar.estoque || ''),
+          foto: produtoParaEditar.foto,
+          categoriaId: String(produtoParaEditar.categoria?.id || '')
+        });
+      } else {
+        setProduto({ nome: '', preco: '', estoque: '', foto: '', categoriaId: '' });
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, produtoParaEditar]);
 
   if (!isOpen) return null;
 
@@ -50,18 +63,18 @@ function ModalProduto({ isOpen, onClose }: ModalProdutoProps) {
     };
 
     try {
-      await createProduto(produtoFormatado);
-      alert('Produto cadastrado com sucesso!');
-      setProduto({ nome: '', preco: '', estoque: '', foto: '', categoriaId: '' });
+      if (produtoParaEditar) {
+        await updateProduto(String(produtoParaEditar.id), produtoFormatado);
+        alert('Produto atualizado com sucesso!');
+      } else {
+        await createProduto(produtoFormatado);
+        alert('Produto cadastrado com sucesso!');
+      }
       onClose();
       window.location.reload();
     } catch (error: any) {
-      if (error.response && error.response.data) {
-        console.error("Erro completo do Servidor:", error.response.data);
-      } else {
-        console.error("Erro na requisição:", error);
-      }
-      alert('Erro ao cadastrar o produto. Verifique se os campos obrigatórios estão corretos.');
+      console.error(error);
+      alert('Erro ao salvar o produto.');
     } finally {
       setCarregando(false);
     }
@@ -71,7 +84,9 @@ function ModalProduto({ isOpen, onClose }: ModalProdutoProps) {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 overflow-hidden">
         <div className="bg-emerald-800 text-white px-6 py-4 flex justify-between items-center">
-          <h3 className="text-xl font-bold">Cadastrar Novo Produto</h3>
+          <h3 className="text-xl font-bold">
+            {produtoParaEditar ? 'Editar Produto' : 'Cadastrar Novo Produto'}
+          </h3>
           <button onClick={onClose} className="text-white text-2xl font-semibold">&times;</button>
         </div>
 
@@ -81,7 +96,6 @@ function ModalProduto({ isOpen, onClose }: ModalProdutoProps) {
             <input
               type="text"
               id="nome"
-              placeholder="Ex: Paracetamol 500mg"
               value={produto.nome}
               onChange={handleChange}
               className="w-full border border-slate-300 rounded px-3 py-2 text-slate-800"
@@ -97,7 +111,6 @@ function ModalProduto({ isOpen, onClose }: ModalProdutoProps) {
                 type="number"
                 id="preco"
                 step="0.01"
-                placeholder="0.00"
                 value={produto.preco}
                 onChange={handleChange}
                 className="w-full border border-slate-300 rounded px-3 py-2 text-slate-800"
@@ -111,7 +124,6 @@ function ModalProduto({ isOpen, onClose }: ModalProdutoProps) {
               <input
                 type="number"
                 id="estoque"
-                placeholder="Ex: 50"
                 value={produto.estoque}
                 onChange={handleChange}
                 className="w-full border border-slate-300 rounded px-3 py-2 text-slate-800"
@@ -145,7 +157,6 @@ function ModalProduto({ isOpen, onClose }: ModalProdutoProps) {
             <input
               type="text"
               id="foto"
-              placeholder="https://exemplo.com/imagem.png"
               value={produto.foto}
               onChange={handleChange}
               className="w-full border border-slate-300 rounded px-3 py-2 text-slate-800"
@@ -167,7 +178,7 @@ function ModalProduto({ isOpen, onClose }: ModalProdutoProps) {
               className="px-4 py-2 rounded bg-emerald-800 text-white font-medium hover:bg-emerald-700 disabled:bg-slate-400"
               disabled={carregando}
             >
-              {carregando ? 'Cadastrando...' : 'Cadastrar'}
+              {carregando ? 'Salvando...' : 'Salvar'}
             </button>
           </div>
         </form>
