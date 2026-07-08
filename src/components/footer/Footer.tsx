@@ -1,25 +1,8 @@
-import { InstagramLogoIcon } from "@phosphor-icons/react"
-
 function Footer() {
-
-  let data = new Date().getFullYear()
-
   return (
-    <>
-      <div className="flex justify-center bg-emerald-800 text-white">
-        <div className="container flex flex-col items-center py-4">
-          <p className='text-xl font-bold'>
-            InteliFarma | Copyright: {data}
-          </p>
-          <p className='text-lg'>Acesse nossa rede social</p>
-
-          <a href="https://www.instagram.com/inteli_farma" target="_blank">
-            <InstagramLogoIcon size={48} weight='bold' />
-          </a>
-
-        </div>
-      </div>
-    </>
+    <footer className='bg-blue-600 text-white text-center py-4 mt-8'>
+      <p>&copy; 2026 Farmácia. Todos os direitos reservados.</p>
+    </footer>
   )
 }
 

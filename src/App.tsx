@@ -1,46 +1,33 @@
-import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/navbar/Navbar';
-import Home from './pages/home/Home';
-import ListaCategorias from './components/categoria/listacategoria/ListaCategoria';
-import ListaProdutos from './components/produtos/listaprodutos/ListaProdutos';
-import ModalCategoria from './models/ModalCategoria';
-import ModalProduto from './models/ModalProdutos';
-import Footer from './components/footer/Footer';
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Toaster } from 'sonner'
+import Navbar from './components/navbar/Navbar'
+import Footer from './components/footer/Footer'
+import ListaCategorias from './components/categoria/listacategorias/ListaCategorias'
+import FormCategoria from './components/categoria/formcategoria/FormCategoria'
+import DeletarCategoria from './components/categoria/deletarcategoria/DeletarCategoria'
+import './App.css'
 
 function App() {
-  const [modalCategoriaAberta, setModalCategoriaAberta] = useState(false);
-  const [modalProdutoAberta, setModalProdutoAberta] = useState(false);
-
   return (
     <>
-      <Navbar
-        onAbrirModalCategoria={() => setModalCategoriaAberta(true)}
-        onAbrirModalProduto={() => setModalProdutoAberta(true)}
-      />
+      <BrowserRouter>
+        <Toaster />
+        <div className='flex flex-col min-h-screen'>
+          <Navbar />
 
-      <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
-        <main className="flex-growcontainer mx-auto px-8 py-8">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/produtos" element={<ListaProdutos />} />
-            <Route path="/categorias" element={<ListaCategorias />} />
-          </Routes>
-        </main>
+          <div className='flex-1'>
+            <Routes>
+              <Route path="/" element={<ListaCategorias />} />
+              <Route path="/categorias" element={<ListaCategorias />} />
+              <Route path="/cadastrarcategoria" element={<FormCategoria />} />
+              <Route path="/editarcategoria/:id" element={<FormCategoria />} />
+              <Route path="/deletarcategoria/:id" element={<DeletarCategoria />} />
+            </Routes>
+          </div>
 
-        <Footer />
-      </div>
-
-      <ModalCategoria
-        isOpen={modalCategoriaAberta}
-        onClose={() => setModalCategoriaAberta(false)}
-      />
-
-      <ModalProduto
-        isOpen={modalProdutoAberta}
-        onClose={() => setModalProdutoAberta(false)}
-      />
+          <Footer />
+        </div>
+      </BrowserRouter>
     </>
   );
 }

@@ -1,94 +1,24 @@
-import axios from 'axios';
+import axios from "axios"
 
 const api = axios.create({
-  baseURL: 'https://farmacia-jjxo.onrender.com'
-});
+  baseURL: import.meta.env.VITE_API_URL
+})
 
-export const getProdutos = async () => {
-  try {
-    const response = await api.get('/produtos');
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao buscar produtos:', error);
-    throw error;
-  }
-};
+export const buscar = async (url: string, setDados: Function) => {
+  const resposta = await api.get(url)
+  setDados(resposta.data)
+}
 
-export const createProduto = async (produto: any) => {
-  try {
-    const response = await api.post('/produtos', produto);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao criar produto:', error);
-    throw error;
-  }
-};
+export const cadastrar = async (url: string, dados: Object, setDados: Function) => {
+  const resposta = await api.post(url, dados)
+  setDados(resposta.data)
+}
 
-export const updateProduto = async (id: string, dados: any) => {
-  try {
-    const produtoComId = {
-      ...dados,
-      id: parseInt(id)
-    };
-    const response = await api.put('/produtos', produtoComId);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao atualizar produto:', error);
-    throw error;
-  }
-};
+export const atualizar = async (url: string, dados: Object, setDados: Function) => {
+  const resposta = await api.put(url, dados)
+  setDados(resposta.data)
+}
 
-export const deleteProduto = async (id: string) => {
-  try {
-    const response = await api.delete(`/produtos/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao deletar produto:', error);
-    throw error;
-  }
-};
-
-export const getCategorias = async () => {
-  try {
-    const response = await api.get('/categorias');
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao buscar categorias:', error);
-    throw error;
-  }
-};
-
-export const createCategoria = async (categoria: any) => {
-  try {
-    const response = await api.post('/categorias', categoria);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao criar categoria:', error);
-    throw error;
-  }
-};
-
-export const updateCategoria = async (id: number, dados: any) => {
-  try {
-    const categoriaComId = {
-      ...dados,
-      id: id
-    };
-    const response = await api.put('/categorias', categoriaComId);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao atualizar categoria:', error);
-    throw error;
-  }
-
-};
-
-export const deleteCategoria = async (id: number) => {
-  try {
-    const response = await api.delete(`/categorias/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao deletar categoria:', error);
-    throw error;
-  }
-};
+export const deletar = async (url: string) => {
+  await api.delete(url)
+}
