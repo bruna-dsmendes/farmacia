@@ -80,6 +80,7 @@ export const updateCategoria = async (id: number, dados: any) => {
     console.error('Erro ao atualizar categoria:', error);
     throw error;
   }
+
 };
 
 export const deleteCategoria = async (id: number) => {
